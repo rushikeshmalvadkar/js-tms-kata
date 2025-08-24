@@ -1,9 +1,14 @@
 
 const taskList = [];
 const taskInput = document.getElementById("taskInput");
-const addTaskBtn = document.getElementById("addTaskBtn");
 const taskContainer = document.getElementById("taskcontainer");
-addTaskBtn.addEventListener("click", addTask);
+const blukRemoveBtn = document.getElementById("bulkRemoveBtn");
+blukRemoveBtn.hidden= true;
+taskInput.addEventListener("keydown", (event) => {
+  if(event.key == 'Enter'){
+    addTask();
+  }
+});
 
 function addTask() {
     const task = taskInput.value.trim();
@@ -39,15 +44,32 @@ function handleTaskStatusChange(task) {
     const changedTask = taskList.find(t => t.name === task.name);
     console.log(`task to be change ${JSON.stringify(changedTask)}`);
     changedTask.status = !changedTask.status;
+    const completedTask =  taskList.filter(t => t.status);
+    if(completedTask.length>0){
+        blukRemoveBtn.hidden= false;
+    }
     console.log(`current task list ${JSON.stringify(taskList)}`);
     console.log("handleTaskStatusChange >>>>>>>>>>");
 }
 
 const handleRemoveTask = (task) => {
     console.log("<<<<<<<<<< handleRemoveTask");
-    const taskIndexToBeRemove = taskList.indexOf(task);
-    taskList.splice(taskIndexToBeRemove, 1);
+    removTask(task);
     console.log("handleRemoveTask >>>>>>>>>>");
     renderTasks();
 };
+
+const handleRemoveCompletedBulkTask = () => {
+    console.log("<<<<<<<<<< handleRemoveCompletedBulkTask");
+     taskList.filter(t => t.status).forEach(task => {
+        removTask(task);
+     });
+    console.log("handleRemoveCompletedBulkTask >>>>>>>>>>");
+    renderTasks();
+}
+
+function removTask(task) {
+    const taskIndexToBeRemove = taskList.indexOf(task);
+    taskList.splice(taskIndexToBeRemove, 1);
+}
 
