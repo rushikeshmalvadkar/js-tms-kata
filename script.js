@@ -16,6 +16,11 @@ function addTask() {
         taskInput.reportValidity();
         return;
     }
+    const exitingTask = taskList.find(t => t.name===task);
+    if(exitingTask){
+        alert("Task already Exist")
+        return;
+    }
     taskList.push({ name: task, status: false });
     taskInput.value = "";
     renderTasks();
