@@ -1,4 +1,4 @@
-
+const ENABLE_CARD_FEATURE = false;
 const taskInput = document.getElementById("taskInput");
 const taskContainer = document.getElementById("taskcontainer");
 const blukRemoveBtn = document.getElementById("bulkRemoveBtn");
@@ -43,22 +43,38 @@ function renderTasks() {
     const tasks = get("tasks");
     showClearCompleteTaskBtn()
     for (let task of tasks ) {
-        const checkbox = document.createElement("input");
-        const taskDiv = document.createElement("div");
-        const removeTaskBtn = document.createElement("button");
-        removeTaskBtn.textContent = "Remove";
-        checkbox.type = "checkbox";
-        checkbox.checked = task.status;
-        checkbox.addEventListener("click", () => handleTaskStatusChange(task));
-        removeTaskBtn.addEventListener("click", () => handleRemoveTask(task));
-        const p = document.createElement("p");
-        p.textContent = task.name;
-        taskContainer.appendChild(taskDiv);
-        taskDiv.appendChild(checkbox);
-        taskDiv.appendChild(p);
-        taskDiv.appendChild(removeTaskBtn);
+        if(ENABLE_CARD_FEATURE){
+            handleSingleTaskInCard(task);
+        } else {
+            handleSingleTaskDisplay(task);
+        }
     }
 }
+
+function handleSingleTaskInCard(task) {
+     const taskParagraph = document.createElement("p");
+     taskParagraph.className = 'text-success';
+     taskParagraph.textContent = "Card based task comming soon...";
+     taskContainer.appendChild(taskParagraph);
+}
+
+function handleSingleTaskDisplay(task) {
+    const checkbox = document.createElement("input");
+    const taskDiv = document.createElement("div");
+    const removeTaskBtn = document.createElement("button");
+    removeTaskBtn.textContent = "Remove";
+    checkbox.type = "checkbox";
+    checkbox.checked = task.status;
+    checkbox.addEventListener("click", () => handleTaskStatusChange(task));
+    removeTaskBtn.addEventListener("click", () => handleRemoveTask(task));
+    const p = document.createElement("p");
+    p.textContent = task.name;
+    taskContainer.appendChild(taskDiv);
+    taskDiv.appendChild(checkbox);
+    taskDiv.appendChild(p);
+    taskDiv.appendChild(removeTaskBtn);
+}
+
 function handleTaskStatusChange(task) {
     console.log("<<<<<<<<<< handleTaskStatusChange");
     const tasks =  get("tasks");
@@ -97,9 +113,10 @@ const handleRemoveCompletedBulkTask = () => {
     renderTasks();
 }
 
-function removTask(task) {
-    const taskIndexToBeRemove = afterParsTasks.indexOf(task);
-    afterParsTasks.splice(taskIndexToBeRemove, 1);
-    localStorage.setItem('tasks', JSON.stringify(afterParsTasks));
+function removTask(taskToBeRemo) {
+    const tasks = get("tasks");
+    const taskIndexToBeRemove = tasks.findIndex(task => task.name===taskToBeRemo.name);;
+    tasks.splice(taskIndexToBeRemove, 1);
+    set("tasks",tasks);
 }
 
