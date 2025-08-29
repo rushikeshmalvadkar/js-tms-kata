@@ -3,6 +3,7 @@ const taskInput = document.getElementById("taskInput");
 const taskContainer = document.getElementById("taskcontainer");
 const blukRemoveBtn = document.getElementById("bulkRemoveBtn");
 blukRemoveBtn.hidden = true;
+blukRemoveBtn.className="btn btn-sm btn-danger mb-4";
 
 // drag & drop code 
 const sortable = new Sortable(document.getElementById('taskcontainer'), {
