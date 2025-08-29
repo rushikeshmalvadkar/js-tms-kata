@@ -1,9 +1,9 @@
 
-const taskList = [];
 const taskInput = document.getElementById("taskInput");
 const taskContainer = document.getElementById("taskcontainer");
 const blukRemoveBtn = document.getElementById("bulkRemoveBtn");
 blukRemoveBtn.hidden = true;
+renderTasks();
 taskInput.addEventListener("keydown", (event) => {
     if (event.key == 'Enter') {
         addTask();
@@ -16,22 +16,33 @@ function addTask() {
         taskInput.reportValidity();
         return;
     }
+    const taskList = get("tasks");
     const exitingTask = taskList.find(t => t.name===task);
     if(exitingTask){
         alert("Task already Exist")
         return;
     }
     taskList.push({ name: task, status: false });
+    set('tasks', taskList);
     taskInput.value = "";
     renderTasks();
 }
 
+function get(key) {
+    const tasks = localStorage.getItem(key);
+    return tasks ?  JSON.parse(tasks) : [];
+}
+
+function set(key, data) {
+   localStorage.setItem(key, JSON.stringify(data));
+}
+
 
 function renderTasks() {
-    console.log(`current task list ${JSON.stringify(taskList)}`);
     taskContainer.replaceChildren();
-
-    for (let task of taskList) {
+    const tasks = get("tasks");
+    showClearCompleteTaskBtn()
+    for (let task of tasks ) {
         const checkbox = document.createElement("input");
         const taskDiv = document.createElement("div");
         const removeTaskBtn = document.createElement("button");
@@ -50,15 +61,23 @@ function renderTasks() {
 }
 function handleTaskStatusChange(task) {
     console.log("<<<<<<<<<< handleTaskStatusChange");
-    const changedTask = taskList.find(t => t.name === task.name);
+    const tasks =  get("tasks");
+    const changedTask = tasks.find(t => t.name === task.name);
     console.log(`task to be change ${JSON.stringify(changedTask)}`);
     changedTask.status = !changedTask.status;
-    const completedTask = taskList.filter(t => t.status);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    showClearCompleteTaskBtn();
+    console.log("handleTaskStatusChange >>>>>>>>>>");
+}
+
+function showClearCompleteTaskBtn(){
+    const tasks =  get("tasks");
+     const completedTask = tasks.filter(t => t.status);
     if (completedTask.length > 0) {
         blukRemoveBtn.hidden = false;
+        return;
     }
-    console.log(`current task list ${JSON.stringify(taskList)}`);
-    console.log("handleTaskStatusChange >>>>>>>>>>");
+    blukRemoveBtn.hidden = true;
 }
 
 const handleRemoveTask = (task) => {
@@ -79,7 +98,8 @@ const handleRemoveCompletedBulkTask = () => {
 }
 
 function removTask(task) {
-    const taskIndexToBeRemove = taskList.indexOf(task);
-    taskList.splice(taskIndexToBeRemove, 1);
+    const taskIndexToBeRemove = afterParsTasks.indexOf(task);
+    afterParsTasks.splice(taskIndexToBeRemove, 1);
+    localStorage.setItem('tasks', JSON.stringify(afterParsTasks));
 }
 
