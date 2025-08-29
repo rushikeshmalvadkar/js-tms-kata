@@ -3,6 +3,27 @@ const taskInput = document.getElementById("taskInput");
 const taskContainer = document.getElementById("taskcontainer");
 const blukRemoveBtn = document.getElementById("bulkRemoveBtn");
 blukRemoveBtn.hidden = true;
+
+// drag & drop code 
+const sortable = new Sortable(document.getElementById('taskcontainer'), {
+    animation: 150,
+    ghostClass: 'sortable-ghost',
+    onEnd: function (evt) {
+        const oldIndex = evt.oldIndex;
+        const newIndex = evt.newIndex;
+
+        if (oldIndex !== newIndex) {
+            const tasks = get("tasks");
+            const movedTask = tasks.splice(oldIndex, 1)[0];
+            tasks.splice(newIndex, 0, movedTask);
+            set("tasks", tasks);
+            renderTasks(); // Re-render to update indexes
+        }
+    }
+});
+
+
+
 renderTasks();
 taskInput.addEventListener("keydown", (event) => {
     if (event.key == 'Enter') {
@@ -53,22 +74,22 @@ function renderTasks() {
 
 function handleSingleTaskInCard(task) {
     const taskDiv = document.createElement("div");
-    taskDiv.className = "col-md-3 mb-4"; // 4 cards per row
+    taskDiv.className = "col-md-3 mb-4";
 
     // Create card
     const card = document.createElement("div");
-    card.className = "card shadow-sm"; // h-100 makes all cards same height
+    card.className = `card shadow-sm ${task.status ? 'bg-info-subtle' : 'bg-white'}`; // Conditional background
 
     // Card body
     const cardBody = document.createElement("div");
     cardBody.className = "card-body d-flex flex-column justify-content-between";
 
-    // Task name (title area)
+    // Task name
     const taskText = document.createElement("p");
     taskText.className = "card-text flex-grow-1";
     taskText.textContent = task.name;
 
-    // Buttons container (bottom of card)
+    // Buttons
     const btnGroup = document.createElement("div");
     btnGroup.className = "row mt-3";
 
@@ -89,8 +110,8 @@ function handleSingleTaskInCard(task) {
     btnGroup.appendChild(removeTaskBtn);
 
     // Assemble card
-    cardBody.appendChild(taskText);     // Title
-    cardBody.appendChild(btnGroup);    // Buttons
+    cardBody.appendChild(taskText);
+    cardBody.appendChild(btnGroup);
     card.appendChild(cardBody);
     taskDiv.appendChild(card);
 
@@ -99,14 +120,15 @@ function handleSingleTaskInCard(task) {
 }
 
 
+
 function handleSingleTaskDisplay(task) {
     const checkbox = document.createElement("input");
     const taskDiv = document.createElement("div");
     const removeTaskBtn = document.createElement("button");
-    removeTaskBtn.textContent = "Remove";
-    checkbox.type = "checkbox";
-    checkbox.checked = task.status;
-    checkbox.addEventListener("click", () => handleTaskStatusChange(task));
+    //removeTaskBtn.textContent = "Remove";
+    //checkbox.type = "checkbox";
+    //checkbox.checked = task.status;
+    //checkbox.addEventListener("click", () => handleTaskStatusChange(task));
     removeTaskBtn.addEventListener("click", () => handleRemoveTask(task));
     const p = document.createElement("p");
     p.textContent = task.name;
@@ -122,8 +144,12 @@ function handleTaskStatusChange(task) {
     const changedTask = tasks.find(t => t.name === task.name);
     console.log(`task to be change ${JSON.stringify(changedTask)}`);
     changedTask.status = !changedTask.status;
+
+
     localStorage.setItem('tasks', JSON.stringify(tasks));
+    renderTasks();
     showClearCompleteTaskBtn();
+
     console.log("handleTaskStatusChange >>>>>>>>>>");
 }
 
