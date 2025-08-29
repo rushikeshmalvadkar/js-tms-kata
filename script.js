@@ -1,4 +1,4 @@
-const ENABLE_CARD_FEATURE = false;
+const ENABLE_CARD_FEATURE = true;
 const taskInput = document.getElementById("taskInput");
 const taskContainer = document.getElementById("taskcontainer");
 const blukRemoveBtn = document.getElementById("bulkRemoveBtn");
@@ -17,8 +17,8 @@ function addTask() {
         return;
     }
     const taskList = get("tasks");
-    const exitingTask = taskList.find(t => t.name===task);
-    if(exitingTask){
+    const exitingTask = taskList.find(t => t.name === task);
+    if (exitingTask) {
         alert("Task already Exist")
         return;
     }
@@ -30,11 +30,11 @@ function addTask() {
 
 function get(key) {
     const tasks = localStorage.getItem(key);
-    return tasks ?  JSON.parse(tasks) : [];
+    return tasks ? JSON.parse(tasks) : [];
 }
 
 function set(key, data) {
-   localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(data));
 }
 
 
@@ -42,8 +42,8 @@ function renderTasks() {
     taskContainer.replaceChildren();
     const tasks = get("tasks");
     showClearCompleteTaskBtn()
-    for (let task of tasks ) {
-        if(ENABLE_CARD_FEATURE){
+    for (let task of tasks) {
+        if (ENABLE_CARD_FEATURE) {
             handleSingleTaskInCard(task);
         } else {
             handleSingleTaskDisplay(task);
@@ -52,11 +52,52 @@ function renderTasks() {
 }
 
 function handleSingleTaskInCard(task) {
-     const taskParagraph = document.createElement("p");
-     taskParagraph.className = 'text-success';
-     taskParagraph.textContent = "Card based task comming soon...";
-     taskContainer.appendChild(taskParagraph);
+    const taskDiv = document.createElement("div");
+    taskDiv.className = "col-md-3 mb-4"; // 4 cards per row
+
+    // Create card
+    const card = document.createElement("div");
+    card.className = "card shadow-sm"; // h-100 makes all cards same height
+
+    // Card body
+    const cardBody = document.createElement("div");
+    cardBody.className = "card-body d-flex flex-column justify-content-between";
+
+    // Task name (title area)
+    const taskText = document.createElement("p");
+    taskText.className = "card-text flex-grow-1";
+    taskText.textContent = task.name;
+
+    // Buttons container (bottom of card)
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "row mt-3";
+
+    const markCompletedBtn = document.createElement("button");
+    markCompletedBtn.textContent = task.status ? "Mark Pending" : "Mark Completed";
+    markCompletedBtn.className = task.status
+        ? "btn btn-sm btn-primary w-100 col-md-6 mb-2"
+        : "btn btn-sm btn-success w-100 col-md-6 mb-2";
+    markCompletedBtn.addEventListener("click", () => handleTaskStatusChange(task));
+
+    const removeTaskBtn = document.createElement("button");
+    removeTaskBtn.textContent = "Remove";
+    removeTaskBtn.className = "btn btn-sm btn-danger col-md-6 w-100";
+    removeTaskBtn.addEventListener("click", () => handleRemoveTask(task));
+
+    // Append buttons
+    btnGroup.appendChild(markCompletedBtn);
+    btnGroup.appendChild(removeTaskBtn);
+
+    // Assemble card
+    cardBody.appendChild(taskText);     // Title
+    cardBody.appendChild(btnGroup);    // Buttons
+    card.appendChild(cardBody);
+    taskDiv.appendChild(card);
+
+    // Add to container
+    taskContainer.appendChild(taskDiv);
 }
+
 
 function handleSingleTaskDisplay(task) {
     const checkbox = document.createElement("input");
@@ -77,7 +118,7 @@ function handleSingleTaskDisplay(task) {
 
 function handleTaskStatusChange(task) {
     console.log("<<<<<<<<<< handleTaskStatusChange");
-    const tasks =  get("tasks");
+    const tasks = get("tasks");
     const changedTask = tasks.find(t => t.name === task.name);
     console.log(`task to be change ${JSON.stringify(changedTask)}`);
     changedTask.status = !changedTask.status;
@@ -86,9 +127,9 @@ function handleTaskStatusChange(task) {
     console.log("handleTaskStatusChange >>>>>>>>>>");
 }
 
-function showClearCompleteTaskBtn(){
-    const tasks =  get("tasks");
-     const completedTask = tasks.filter(t => t.status);
+function showClearCompleteTaskBtn() {
+    const tasks = get("tasks");
+    const completedTask = tasks.filter(t => t.status);
     if (completedTask.length > 0) {
         blukRemoveBtn.hidden = false;
         return;
@@ -115,8 +156,8 @@ const handleRemoveCompletedBulkTask = () => {
 
 function removTask(taskToBeRemo) {
     const tasks = get("tasks");
-    const taskIndexToBeRemove = tasks.findIndex(task => task.name===taskToBeRemo.name);;
+    const taskIndexToBeRemove = tasks.findIndex(task => task.name === taskToBeRemo.name);;
     tasks.splice(taskIndexToBeRemove, 1);
-    set("tasks",tasks);
+    set("tasks", tasks);
 }
 
