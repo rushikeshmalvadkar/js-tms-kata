@@ -97,9 +97,10 @@ const handleRemoveCompletedBulkTask = () => {
     renderTasks();
 }
 
-function removTask(task) {
-    const taskIndexToBeRemove = afterParsTasks.indexOf(task);
-    afterParsTasks.splice(taskIndexToBeRemove, 1);
-    localStorage.setItem('tasks', JSON.stringify(afterParsTasks));
+function removTask(taskToBeRemo) {
+    const tasks = get("tasks");
+    const taskIndexToBeRemove = tasks.findIndex(task => task.name===taskToBeRemo.name);;
+    tasks.splice(taskIndexToBeRemove, 1);
+    set("tasks",tasks);
 }
 
