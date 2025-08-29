@@ -173,6 +173,7 @@ const handleRemoveTask = (task) => {
 
 const handleRemoveCompletedBulkTask = () => {
     console.log("<<<<<<<<<< handleRemoveCompletedBulkTask");
+    taskList =  get("tasks");
     taskList.filter(t => t.status).forEach(task => {
         removTask(task);
     });
