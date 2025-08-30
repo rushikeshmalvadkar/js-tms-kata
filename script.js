@@ -75,48 +75,47 @@ function renderTasks() {
 
 function handleSingleTaskInCard(task) {
     const taskDiv = document.createElement("div");
-    taskDiv.className = "col-md-3 mb-4";
+    taskDiv.className = "col-md-4 mb-4"; // More space per card
 
-    // Create card
+    // Card container
     const card = document.createElement("div");
-    card.className = `card shadow-sm ${task.status ? 'bg-info-subtle' : 'bg-white'}`; // Conditional background
+    card.className = `card border-0 shadow-lg rounded-4 h-100 
+                      ${task.status ? 'bg-primary-subtle' : 'bg-white'}`;
+    card.style.transition = "all 0.3s ease";
 
     // Card body
     const cardBody = document.createElement("div");
-    cardBody.className = "card-body d-flex flex-column justify-content-between";
+    cardBody.className = "card-body d-flex flex-column justify-content-between p-4";
 
     // Task name
-    const taskText = document.createElement("p");
-    taskText.className = "card-text flex-grow-1";
+    const taskText = document.createElement("h6");
+    taskText.className = `mb-3 fw-semibold ${task.status ? 'text-success' : 'text-dark'}`;
     taskText.textContent = task.name;
+    taskText.style.wordBreak = "break-word";
 
-    // Buttons
+    // Button group (row with spacing)
     const btnGroup = document.createElement("div");
-    btnGroup.className = "row mt-3";
+    btnGroup.className = "d-flex gap-2 mt-auto";
 
     const markCompletedBtn = document.createElement("button");
-    markCompletedBtn.textContent = task.status ? "Mark Pending" : "Mark Completed";
-    markCompletedBtn.className = task.status
-        ? "btn btn-sm btn-primary w-100 col-md-6 mb-2"
-        : "btn btn-sm btn-success w-100 col-md-6 mb-2";
+    markCompletedBtn.textContent = task.status ? "Mark as Pending" : "Mark as Completed";
+    markCompletedBtn.className = `btn btn-sm ${task.status ? 'btn-primary' : 'btn-success'} flex-fill`;
     markCompletedBtn.addEventListener("click", () => handleTaskStatusChange(task));
 
     const removeTaskBtn = document.createElement("button");
     removeTaskBtn.textContent = "Remove";
-    removeTaskBtn.className = "btn btn-sm btn-danger col-md-6 w-100";
+    removeTaskBtn.className = "btn btn-sm btn-danger flex-fill";
     removeTaskBtn.addEventListener("click", () => handleRemoveTask(task));
 
-    // Append buttons
+    // Assemble
     btnGroup.appendChild(markCompletedBtn);
     btnGroup.appendChild(removeTaskBtn);
 
-    // Assemble card
     cardBody.appendChild(taskText);
     cardBody.appendChild(btnGroup);
     card.appendChild(cardBody);
     taskDiv.appendChild(card);
 
-    // Add to container
     taskContainer.appendChild(taskDiv);
 }
 
