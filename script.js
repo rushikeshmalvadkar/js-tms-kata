@@ -173,9 +173,33 @@ function showClearCompleteTaskBtn() {
 
 const handleRemoveTask = (task) => {
     console.log("<<<<<<<<<< handleRemoveTask");
-    removTask(task);
-    console.log("handleRemoveTask >>>>>>>>>>");
-    renderTasks();
+
+    const modalElement = document.getElementById("removeTaskModal");
+    const confirmBtn = document.getElementById("confirmRemoveBtn");
+    const taskNameElem = document.getElementById("taskNameToRemove");
+
+    // Show task name in modal (optional)
+    taskNameElem.textContent = task.name;
+
+    const removeModal = new bootstrap.Modal(modalElement);
+    removeModal.show();
+
+    // Reset previous click listeners
+    confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+    const newConfirmBtn = document.getElementById("confirmRemoveBtn");
+
+    newConfirmBtn.addEventListener("click", () => {
+        // Remove task
+        removTask(task);
+
+        // Hide modal
+        removeModal.hide();
+
+        console.log("handleRemoveTask >>>>>>>>>>");
+
+        // Re-render tasks
+        renderTasks();
+    });
 };
 
 const handleRemoveCompletedBulkTask = () => {
