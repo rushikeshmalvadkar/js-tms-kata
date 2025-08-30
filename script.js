@@ -151,6 +151,13 @@ function handleTaskStatusChange(task) {
     renderTasks();
     showClearCompleteTaskBtn();
 
+    if (changedTask.status) {
+    const modalElement = document.getElementById('congratsModal');
+    const congratsModal = new bootstrap.Modal(modalElement);
+    congratsModal.show();
+}
+
+
     console.log("handleTaskStatusChange >>>>>>>>>>");
 }
 
