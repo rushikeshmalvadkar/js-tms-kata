@@ -75,7 +75,7 @@ function renderTasks() {
 
 function handleSingleTaskInCard(task) {
     const taskDiv = document.createElement("div");
-    taskDiv.className = "col-md-4 mb-4"; // More space per card
+    taskDiv.className = "col-12 col-sm-6 col-md-4 mb-4";
 
     // Card container
     const card = document.createElement("div");
@@ -95,21 +95,21 @@ function handleSingleTaskInCard(task) {
 
     // Button group (row with spacing)
     const btnGroup = document.createElement("div");
-    btnGroup.className = "d-flex gap-2 mt-auto";
+    btnGroup.className = "d-flex flex-column flex-sm-row gap-2 mt-auto";
 
     const markCompletedBtn = document.createElement("button");
     markCompletedBtn.textContent = task.status ? "Mark as Pending" : "Mark as Completed";
-    markCompletedBtn.className = `btn btn-sm ${task.status ? 'btn-primary' : 'btn-success'} flex-fill`;
+    markCompletedBtn.className = `btn btn-sm ${task.status ? 'btn-primary' : 'btn-success'} w-100`;
     markCompletedBtn.addEventListener("click", () => handleTaskStatusChange(task));
 
     const removeTaskBtn = document.createElement("button");
     removeTaskBtn.textContent = "Remove";
-    removeTaskBtn.className = "btn btn-sm btn-danger flex-fill";
+    removeTaskBtn.className = "btn btn-sm btn-danger w-100";
     removeTaskBtn.addEventListener("click", () => handleRemoveTask(task));
 
-    // Assemble
     btnGroup.appendChild(markCompletedBtn);
     btnGroup.appendChild(removeTaskBtn);
+
 
     cardBody.appendChild(taskText);
     cardBody.appendChild(btnGroup);
@@ -202,40 +202,40 @@ const handleRemoveTask = (task) => {
 };
 
 const handleRemoveCompletedBulkTask = () => {
-  console.log("<<<<<<<<<< handleRemoveCompletedBulkTask");
+    console.log("<<<<<<<<<< handleRemoveCompletedBulkTask");
 
-  const tasks = get("tasks");
-  const completedTasks = tasks.filter(t => t.status);
+    const tasks = get("tasks");
+    const completedTasks = tasks.filter(t => t.status);
 
-  if (completedTasks.length === 0) return;
+    if (completedTasks.length === 0) return;
 
-  // Populate modal with completed task names
-  const taskListElement = document.getElementById("bulkTaskListToRemove");
-  taskListElement.innerHTML = ""; // Clear old items
-  completedTasks.forEach(task => {
-    const li = document.createElement("li");
-    li.textContent = task.name;
-    li.className = "list-group-item";
-    taskListElement.appendChild(li);
-  });
+    // Populate modal with completed task names
+    const taskListElement = document.getElementById("bulkTaskListToRemove");
+    taskListElement.innerHTML = ""; // Clear old items
+    completedTasks.forEach(task => {
+        const li = document.createElement("li");
+        li.textContent = task.name;
+        li.className = "list-group-item";
+        taskListElement.appendChild(li);
+    });
 
-  // Show the modal
-  const modalElement = document.getElementById("bulkDeleteModal");
-  const bulkDeleteModal = new bootstrap.Modal(modalElement);
-  bulkDeleteModal.show();
+    // Show the modal
+    const modalElement = document.getElementById("bulkDeleteModal");
+    const bulkDeleteModal = new bootstrap.Modal(modalElement);
+    bulkDeleteModal.show();
 
-  // Reset previous listeners
-  const confirmBtn = document.getElementById("confirmBulkDeleteBtn");
-  confirmBtn.replaceWith(confirmBtn.cloneNode(true));
-  const newConfirmBtn = document.getElementById("confirmBulkDeleteBtn");
+    // Reset previous listeners
+    const confirmBtn = document.getElementById("confirmBulkDeleteBtn");
+    confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+    const newConfirmBtn = document.getElementById("confirmBulkDeleteBtn");
 
-  newConfirmBtn.addEventListener("click", () => {
-    completedTasks.forEach(task => removTask(task));
-    bulkDeleteModal.hide();
-    renderTasks();
-    blukRemoveBtn.hidden = true;
-    console.log("handleRemoveCompletedBulkTask >>>>>>>>>>");
-  });
+    newConfirmBtn.addEventListener("click", () => {
+        completedTasks.forEach(task => removTask(task));
+        bulkDeleteModal.hide();
+        renderTasks();
+        blukRemoveBtn.hidden = true;
+        console.log("handleRemoveCompletedBulkTask >>>>>>>>>>");
+    });
 };
 
 
