@@ -202,15 +202,42 @@ const handleRemoveTask = (task) => {
 };
 
 const handleRemoveCompletedBulkTask = () => {
-    console.log("<<<<<<<<<< handleRemoveCompletedBulkTask");
-    taskList = get("tasks");
-    taskList.filter(t => t.status).forEach(task => {
-        removTask(task);
-    });
+  console.log("<<<<<<<<<< handleRemoveCompletedBulkTask");
+
+  const tasks = get("tasks");
+  const completedTasks = tasks.filter(t => t.status);
+
+  if (completedTasks.length === 0) return;
+
+  // Populate modal with completed task names
+  const taskListElement = document.getElementById("bulkTaskListToRemove");
+  taskListElement.innerHTML = ""; // Clear old items
+  completedTasks.forEach(task => {
+    const li = document.createElement("li");
+    li.textContent = task.name;
+    li.className = "list-group-item";
+    taskListElement.appendChild(li);
+  });
+
+  // Show the modal
+  const modalElement = document.getElementById("bulkDeleteModal");
+  const bulkDeleteModal = new bootstrap.Modal(modalElement);
+  bulkDeleteModal.show();
+
+  // Reset previous listeners
+  const confirmBtn = document.getElementById("confirmBulkDeleteBtn");
+  confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+  const newConfirmBtn = document.getElementById("confirmBulkDeleteBtn");
+
+  newConfirmBtn.addEventListener("click", () => {
+    completedTasks.forEach(task => removTask(task));
+    bulkDeleteModal.hide();
+    renderTasks();
     blukRemoveBtn.hidden = true;
     console.log("handleRemoveCompletedBulkTask >>>>>>>>>>");
-    renderTasks();
-}
+  });
+};
+
 
 function removTask(taskToBeRemo) {
     const tasks = get("tasks");
