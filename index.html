@@ -10,10 +10,11 @@
 <body>
     <div id="main" class="container mt-5">
         <!-- add task -->
-        <div>
-            <input type="text" class="form-control" id="taskInput" placeholder="Please write task here and press enter"
-                required />
-        </div><br>
+        <div class="mb-3">
+            <input type="text" class="form-control form-control-lg shadow-sm" id="taskInput"
+                placeholder="Please write a task here and press Enter" required />
+        </div>
+
         <button id="bulkRemoveBtn" onclick="handleRemoveCompletedBulkTask()">Clear Completed Task</button>
         <!-- show task list -->
         <div id="taskcontainer" class="row" style="cursor: pointer;">
