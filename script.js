@@ -3,7 +3,7 @@ const taskInput = document.getElementById("taskInput");
 const taskContainer = document.getElementById("taskcontainer");
 const blukRemoveBtn = document.getElementById("bulkRemoveBtn");
 blukRemoveBtn.hidden = true;
-blukRemoveBtn.className="btn btn-sm btn-danger mb-4";
+blukRemoveBtn.className = "btn btn-sm btn-danger mb-4";
 
 // drag & drop code 
 const sortable = new Sortable(document.getElementById('taskcontainer'), {
@@ -152,10 +152,10 @@ function handleTaskStatusChange(task) {
     showClearCompleteTaskBtn();
 
     if (changedTask.status) {
-    const modalElement = document.getElementById('congratsModal');
-    const congratsModal = new bootstrap.Modal(modalElement);
-    congratsModal.show();
-}
+        const modalElement = document.getElementById('congratsModal');
+        const congratsModal = new bootstrap.Modal(modalElement);
+        congratsModal.show();
+    }
 
 
     console.log("handleTaskStatusChange >>>>>>>>>>");
@@ -180,7 +180,7 @@ const handleRemoveTask = (task) => {
 
 const handleRemoveCompletedBulkTask = () => {
     console.log("<<<<<<<<<< handleRemoveCompletedBulkTask");
-    taskList =  get("tasks");
+    taskList = get("tasks");
     taskList.filter(t => t.status).forEach(task => {
         removTask(task);
     });
