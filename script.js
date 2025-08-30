@@ -9,6 +9,7 @@ blukRemoveBtn.className = "btn btn-sm btn-danger mb-4";
 const sortable = new Sortable(document.getElementById('taskcontainer'), {
     animation: 150,
     ghostClass: 'sortable-ghost',
+    handle: '.drag-handle',  // Make only the drag handle clickable for sorting
     onEnd: function (evt) {
         const oldIndex = evt.oldIndex;
         const newIndex = evt.newIndex;
@@ -22,6 +23,8 @@ const sortable = new Sortable(document.getElementById('taskcontainer'), {
         }
     }
 });
+
+
 
 
 
@@ -87,11 +90,19 @@ function handleSingleTaskInCard(task) {
     const cardBody = document.createElement("div");
     cardBody.className = "card-body d-flex flex-column justify-content-between p-4";
 
+    // Drag handle (added)
+    const dragHandle = document.createElement("div");
+    dragHandle.className = "drag-handle";
+    dragHandle.innerHTML = "<p>☰</p>"; // Use an icon or text for the drag handle
+    cardBody.appendChild(dragHandle); // Add handle to card
+
     // Task name
+    const taskTitleDiv = document.createElement("div");
     const taskText = document.createElement("h6");
     taskText.className = `mb-3 fw-semibold ${task.status ? 'text-success' : 'text-dark'}`;
     taskText.textContent = task.name;
     taskText.style.wordBreak = "break-word";
+    taskTitleDiv.appendChild(taskText);
 
     // Button group (row with spacing)
     const btnGroup = document.createElement("div");
@@ -110,14 +121,14 @@ function handleSingleTaskInCard(task) {
     btnGroup.appendChild(markCompletedBtn);
     btnGroup.appendChild(removeTaskBtn);
 
-
-    cardBody.appendChild(taskText);
+    cardBody.appendChild(taskTitleDiv);
     cardBody.appendChild(btnGroup);
     card.appendChild(cardBody);
     taskDiv.appendChild(card);
 
     taskContainer.appendChild(taskDiv);
 }
+
 
 
 

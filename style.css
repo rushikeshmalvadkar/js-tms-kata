@@ -11,3 +11,8 @@
   border-color: #198754; /* Match Bootstrap success theme */
   outline: none;
 }
+
+.drag-handle{
+  text-align: right;
+}
+
