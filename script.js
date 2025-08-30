@@ -82,7 +82,7 @@ function handleSingleTaskInCard(task) {
 
     // Card container
     const card = document.createElement("div");
-    card.className = `card border-0 shadow-lg rounded-4 h-100 
+    card.className = `card border-0 shadow-lg rounded-4 
                       ${task.status ? 'bg-primary-subtle' : 'bg-white'}`;
     card.style.transition = "all 0.3s ease";
 
